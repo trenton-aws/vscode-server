@@ -10,7 +10,10 @@ from constructs import Construct
 """
   Create a VSCode code-server instance with an Amazon CloudFront distribution.
 """
+
+
 class VsCodeServerStack(Stack):
+
   def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
     super().__init__(scope, construct_id, **kwargs)
 
@@ -41,6 +44,7 @@ class VsCodeServerStack(Stack):
         'CIDR': '10.0.4.0/24',
       },
     }
+
     awsRegions2PrefixListId = {
       'ap-northeast-1': {
         'PrefixList': 'pl-58a04531',
@@ -116,19 +120,12 @@ class VsCodeServerStack(Stack):
             'blockPublicPolicy': True,
             'ignorePublicAcls': True,
             'restrictPublicBuckets': True,
-          },
+          }
         )
-    ssmLogBucket.cfn_options.metadata = {
-      'cfn_nag': {
-        'rules_to_suppress': [
-          {
-            'id': 'W35',
-            'reason': 'Access logs aren\'t needed for this bucket',
-          },
-        ],
-      },
-    }
     ssmLogBucket.cfn_options.deletion_policy = cdk.CfnDeletionPolicy.DELETE
+    ssmLogBucket.apply_removal_policy(
+      policy=cdk.RemovalPolicy.DESTROY
+    )
 
     vpc = ec2.CfnVPC(self, 'VPC',
           cidr_block = subnets['VPC']['CIDR'],
@@ -673,6 +670,3 @@ class VsCodeServerStack(Stack):
       export_name = f"""{self.stack_name}-URL""",
       value = str(self.url),
     )
-
-
-
