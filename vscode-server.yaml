@@ -344,6 +344,7 @@ Resources:
                 - apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev curl llvm libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
                 - apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y python3-pip
                 - pip3 install git-remote-codecommit
+                - echo 'alias python=python3' >> /home/ubuntu/.bashrc
           # - action: aws:runShellScript
           #   name: CloneCodeCommitRepo
           #   inputs:
